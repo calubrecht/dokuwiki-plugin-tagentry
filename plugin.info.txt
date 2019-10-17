@@ -1,5 +1,5 @@
 base    tagentry
-authors Robin Gareus, Sphaira, trailjeep
+authors Robin Gareus, ,John Martin, Sphaira, trailjeep
 email   sphairadev@null.net
 date    2019-10-17
 name    Tagentry Plugin

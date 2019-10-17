@@ -1,14 +1,5 @@
 <?php
 
-// +-----------------------------------------------------------------------------
-// | File : action.php
-// | Date : 13/07/2017 18:12:15
-// | Version : 1.0
-// | Author : John Martin
-// | e-mail : xenokleid@gmail.com
-// +-----------------------------------------------------------------------------
-
-
 // must be run within Dokuwiki
 if ( !defined( 'DOKU_INC' ) )
     die();
@@ -18,24 +9,7 @@ if ( !defined( 'DOKU_PLUGIN' ) )
 
 require_once( DOKU_PLUGIN . 'action.php' );
 
-// +-----------------------------------------------------------------------------
-// | Classes
-// +-----------------------------------------------------------------------------
-
 class action_plugin_tagentry extends DokuWiki_Action_Plugin {
-    /**
-     * return some info
-     */
-    function getInfo() {
-        return array(
-            'author' => 'John Martin',
-            'email' => 'sphairadev@null.net',
-            'date' => '2017-07-20',
-            'name' => 'Tagentry Plugin',
-            'desc' => 'Assign tags using checkboxes in edit mode',
-            'url' => 'https://www.dokuwiki.org/plugin:tagentry'
-        );
-    }
 
     /**
      * register the eventhandlers
@@ -298,6 +272,3 @@ class action_plugin_tagentry extends DokuWiki_Action_Plugin {
     }
     // MODIF : 23/12/2013 14:55:07
 }
-// +-----------------------------------------------------------------------------
-// | End of action.php
-// +-----------------------------------------------------------------------------
