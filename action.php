@@ -215,7 +215,7 @@ class action_plugin_tagentry extends DokuWiki_Action_Plugin {
         }
 
         $rv .= '</div>';
-        $rv .= '</div>';
+        //$rv .= '</div>';
         return ( $rv );
     }
 
