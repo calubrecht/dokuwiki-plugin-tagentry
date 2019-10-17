@@ -13,3 +13,7 @@
 	background : @ini_background_neu;
 	color : @ini_text_neu;
 }
+
+input[id^=plugin__tagentry_cb] {
+	display:none;
+}
