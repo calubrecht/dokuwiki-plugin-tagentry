@@ -41,6 +41,7 @@ class action_plugin_tagentry extends DokuWiki_Action_Plugin {
      * register the eventhandlers
      */
     function register( &$controller ) {
+	public function register(Doku_Event_Handler $controller) {
 
         // hook
         $controller->register_hook(
