@@ -1,0 +1,14 @@
+
+#plugin__tagentry_wrapper div.taglist {
+    overflow:auto;
+    max-height:6em;
+    margin-bottom:.25em;
+}
+    #plugin__tagentry_wrapper div.taglist label{
+        border-radius : 5px;
+        background : @ini_background_panel;
+        color : @ini_text_panel ;
+
+        padding: 0.2em 1em 0.35em 1em;
+        font-size: 0.9em;
+    }

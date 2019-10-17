@@ -1,0 +1,7 @@
+base    tagentry
+authors Robin Gareus, Sphaira
+email   sphairadev@null.net
+date    2017-07-20
+name    Tagentry Plugin
+desc    Assign tags using checkboxes in edit mode
+url     https://www.dokuwiki.org/plugin:tagentry
