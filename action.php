@@ -101,7 +101,6 @@ class action_plugin_tagentry extends DokuWiki_Action_Plugin {
         if ( $type == 'f' && auth_quickaclcheck( $id ) < AUTH_READ ) {
             return false;
         }
-
         $data[] = noNS( $id );
         return $return;
     }
@@ -177,11 +176,10 @@ class action_plugin_tagentry extends DokuWiki_Action_Plugin {
         $rv = '';
         if ( !is_array( $alltags ) ){ return $rv; }
         if ( count( $alltags ) < 1 ){ return $rv; }
-
-        $rv .= '<div>';
+        //$rv .= '<div>';
         //$rv .= ' <div><label>' . $this->getLang( 'assign' ) . '</label></div>';
         $rv .= '<div class="taglist"' . $dstyle . '>';
-        $rv .= '<div>';
+        //$rv .= '<div>';
 
         // Trie les tags
         natcasesort( $alltags );
