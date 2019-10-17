@@ -232,7 +232,7 @@ class action_plugin_tagentry extends DokuWiki_Action_Plugin {
 
             // MODIF : 23/12/2013 14:43:26
             $rv .= ' /> ' . $this->_getTagTitle( $tagname )  ;
-            $rv .= '</label>&nbsp;';
+            $rv .= '</label>';
             //$rv.=' /> '.$this->clipstring($tagname).'</label>&nbsp;';
             // MODIF : 23/12/2013 14:43:26
 
