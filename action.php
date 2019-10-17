@@ -1,11 +1,9 @@
 <?php
 
 // must be run within Dokuwiki
-if ( !defined( 'DOKU_INC' ) )
-    die();
+if ( !defined( 'DOKU_INC' ) ) die();
 
-if ( !defined( 'DOKU_PLUGIN' ) )
-    define( 'DOKU_PLUGIN', DOKU_INC . 'lib/plugins/' );
+if ( !defined( 'DOKU_PLUGIN' ) ) define( 'DOKU_PLUGIN', DOKU_INC . 'lib/plugins/' );
 
 require_once( DOKU_PLUGIN . 'action.php' );
 
@@ -15,34 +13,26 @@ class action_plugin_tagentry extends DokuWiki_Action_Plugin {
      * register the eventhandlers
      */
 	public function register(Doku_Event_Handler $controller) {
-
         // hook
         $controller->register_hook(
             'HTML_EDITFORM_OUTPUT', 'BEFORE', $this,
             'handle_editform_output'
         );
-
     }
 
     /**
      * Create the additional fields for the edit form.
      */
     function handle_editform_output( &$event, $param ) {
-
         $pos = $event->data->findElementByAttribute( 'type', 'submit' );
         if ( !$pos ){ return; }
-
-        // MODIF : 19/12/2013 08:21:50
         $prefixHidden = empty( $event->data->_hidden['prefix'] );
         $suffixHidden = empty( $event->data->_hidden['suffix'] );
         if ( $prefixHidden || ! $suffixHidden ){
             return;
         }
-        // MODIF : 19/12/2013 08:21:50
-
         // get all tags
         $tagns = $this->getConf( 'namespace' );
-
         if ( $thlp =& plugin_load( 'helper', 'tag' ) ) {
             if ( $this->getConf( 'tagsrc' ) == 'Pagenames in tag NS' ) {
                 $tagnst = $thlp->getConf( 'namespace' );
@@ -50,12 +40,8 @@ class action_plugin_tagentry extends DokuWiki_Action_Plugin {
                     $tagns = $tagnst;
             }
         }
-
         if ( $this->getConf( 'tagsrc' ) == 'All tags' && $thlp ) {
-            // MODIF : 18/12/2013 21:52:02
-            //$alltags=$this->_gettags($thlp);
             $alltags = array_map( 'trim', idx_getIndex( 'subject', '_w' ) );
-            // MODIF : 18/12/2013 21:52:02
         } else {
             $alltags = $this->_getpages( $tagns );
         }
@@ -64,19 +50,16 @@ class action_plugin_tagentry extends DokuWiki_Action_Plugin {
         $assigned = false;
         if ( 1 ) { // parse wiki-text to pick up tags for draft/prevew
             $wikipage = '';
-
             $wt = $event->data->findElementByType( 'wikitext' );
             if ( $wt !== false ) {
                 $wikipage = $event->data->_content[$wt]['_text'];
             }
-
             if ( !empty( $wikipage ) ){
                 if ( preg_match( '@\{\{tag>(.*?)\}\}@', $wikipage, $m ) ) {
                     $assigned = explode( ' ', $m[1] );
                 }
             }
         }
-
         if ( !is_array( $assigned ) ) {
             // those are from the prev. saved version.
             global $ID;
@@ -84,17 +67,13 @@ class action_plugin_tagentry extends DokuWiki_Action_Plugin {
             $meta     = p_get_metadata( $ID );
             $assigned = $meta['subject'];
         }
-
         $options = array(
             'blacklist' => explode( ' ', $this->getConf( 'blacklist' ) ),
             'assigned' => $assigned,
         );
-
-        $out = '';
-        $out .= '<div id="plugin__tagentry_wrapper">';
+        $out = '<div id="plugin__tagentry_wrapper">';
         $out .= $this->_format_tags( $alltags, $options );
         $out .= '</div>';
-
         $event->data->insertElement( $pos++, $out );
     }
 
@@ -113,15 +92,12 @@ class action_plugin_tagentry extends DokuWiki_Action_Plugin {
         } elseif ( $type == 'f' && !preg_match( '#\.txt$#', $file ) ) {
             return false;
         }
-
         $id = pathID( $file );
         if ( getNS( $id ) != $opts['ns'] )
             return false;
-
         if ( isHiddenPage( $id ) ) {
             return false;
         }
-
         if ( $type == 'f' && auth_quickaclcheck( $id ) < AUTH_READ ) {
             return false;
         }
