@@ -1,17 +1,17 @@
 #plugin__tagentry_wrapper div.taglist {
     overflow: auto;
     max-height: 6em;
-    margin-bottom:.25em;
+    margin-bottom: 0.25em;
 	text-align: justify;
 	padding: 0 0.5em;
 }
 #plugin__tagentry_wrapper div.taglist label{
 	display: inline-block;
-	padding: 2px 0.25em;
+	padding: 2px 0.5em;
 	font-size: small;
-	border-radius : 3px;
-	background : @ini_background_neu;
-	color : @ini_text_neu;
+	border-radius : 0.5em;
+	background : @ini_background_alt;
+	color : @ini_text_alt;
 }
 
 input[id^=plugin__tagentry_cb] {
