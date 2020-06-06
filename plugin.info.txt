@@ -1,8 +1,8 @@
 # General Plugin Info do not edit
-base	 tagentry
+base   tagentry
 author Trailjeep
-email	 trailjeep@gmail.com
-date	 2019-10-17
-name	 Tagentry Plugin
-desc	 Assign tags by clicking in edit mode
+email  trailjeep@gmail.com
+date   2019-10-17
+name   Tagentry Plugin
+desc   Assign tags by clicking in edit mode
 url    https://www.dokuwiki.org/plugin:tagentry
