@@ -5,4 +5,4 @@ email	 trailjeep@gmail.com
 date	 2019-10-17
 name	 Tagentry Plugin
 desc	 Assign tags by clicking in edit mode
-url		 https://www.dokuwiki.org/plugin:tagentry
+url    https://www.dokuwiki.org/plugin:tagentry
