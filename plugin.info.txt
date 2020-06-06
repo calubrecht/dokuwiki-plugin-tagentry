@@ -1,7 +1,8 @@
-base	tagentry
-author	Robin Gareus, John Martin, Sphaira, trailjeep
-email	sphairadev@null.net
-date	2019-10-17
-name	Tagentry Plugin
-desc	Assign tags using checkboxes in edit mode
-url		https://www.dokuwiki.org/plugin:tagentry
+# General Plugin Info do not edit
+base	 tagentry
+author Trailjeep
+email	 trailjeep@gmail.com
+date	 2019-10-17
+name	 Tagentry Plugin
+desc	 Assign tags by clicking in edit mode
+url		 https://www.dokuwiki.org/plugin:tagentry
