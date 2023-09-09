@@ -298,7 +298,6 @@ class action_plugin_tagentry extends DokuWiki_Action_Plugin {
 
             $checkbox .= ' onclick="tagentry_clicktag(\'' . $this->escapeJSstring( $tagname ) . '\', this);"';
 
-            // MODIF : 23/12/2013 14:43:26
             $checkbox .= ' /> ' . $this->_getTagTitle( $tagname )  ;
             $checkbox .= '</label>';
             $form->addHTML($checkbox, $pos);
