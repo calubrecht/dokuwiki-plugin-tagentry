@@ -18,20 +18,16 @@ class action_plugin_tagentry extends DokuWiki_Action_Plugin {
             'HTML_EDITFORM_OUTPUT', 'BEFORE', $this,
             'handle_editform_output'
         );
+        $controller->register_hook(
+            'FORM_EDIT_OUTPUT', 'BEFORE', $this,
+            'handle_editform_output'
+        );
     }
 
     /**
      * Create the additional fields for the edit form.
      */
     function handle_editform_output( &$event, $param ) {
-        $pos = $event->data->findElementByAttribute( 'type', 'submit' );
-        if ( !$pos ){ return; }
-        $prefixHidden = empty( $event->data->_hidden['prefix'] );
-        $suffixHidden = empty( $event->data->_hidden['suffix'] );
-        if ( $prefixHidden || ! $suffixHidden ){
-            return;
-        }
-        // get all tags
         $tagns = $this->getConf( 'namespace' );
         if ( $thlp =& plugin_load( 'helper', 'tag' ) ) {
             if ( $this->getConf( 'tagsrc' ) == 'Pagenames in tag NS' ) {
@@ -46,9 +42,44 @@ class action_plugin_tagentry extends DokuWiki_Action_Plugin {
             $alltags = $this->_getpages( $tagns );
         }
 
-        // get already assigned tags for this page
-        $assigned = false;
-        if ( 1 ) { // parse wiki-text to pick up tags for draft/prevew
+        $form = $event->data;
+
+        if (is_a($form, \dokuwiki\Form\Form::class)) {
+          // After Igor, event is a form
+
+          // get already assigned tags for this page
+          $assigned = false;
+          if ( 1 ) { // parse wiki-text to pick up tags for draft/prevew
+            $wikipage = '';
+            $wt = $form->findPositionByAttribute('type', 'wikitext');
+            if ( $wt !== false ) {
+                $wikipage = $event->data->_content[$wt]['_text'];
+            }
+            if ( !empty( $wikipage ) ){
+                if ( preg_match( '@\{\{tag>(.*?)\}\}@', $wikipage, $m ) ) {
+                    $assigned = explode( ' ', $m[1] );
+                }
+            }
+          }
+          if ( !is_array( $assigned ) ) {
+              // those are from the prev. saved version.
+              global $ID;
+              $meta     = array();
+              $meta     = p_get_metadata( $ID );
+              $assigned = $meta['subject'];
+          }
+          $options = array(
+              'blacklist' => explode( ' ', $this->getConf( 'blacklist' ) ),
+              'assigned' => $assigned,
+          );
+
+          $this->_add_tag_checks( $form, $alltags, $options);
+        }
+        else {
+          // earlier releases
+          // get already assigned tags for this page
+          $assigned = false;
+          if ( 1 ) { // parse wiki-text to pick up tags for draft/prevew
             $wikipage = '';
             $wt = $event->data->findElementByType( 'wikitext' );
             if ( $wt !== false ) {
@@ -59,22 +90,33 @@ class action_plugin_tagentry extends DokuWiki_Action_Plugin {
                     $assigned = explode( ' ', $m[1] );
                 }
             }
-        }
-        if ( !is_array( $assigned ) ) {
-            // those are from the prev. saved version.
-            global $ID;
-            $meta     = array();
-            $meta     = p_get_metadata( $ID );
-            $assigned = $meta['subject'];
-        }
-        $options = array(
-            'blacklist' => explode( ' ', $this->getConf( 'blacklist' ) ),
-            'assigned' => $assigned,
-        );
-        $out = '<div id="plugin__tagentry_wrapper">';
-        $out .= $this->_format_tags( $alltags, $options );
-        $out .= '</div>';
-        $event->data->insertElement( $pos++, $out );
+          }
+          if ( !is_array( $assigned ) ) {
+              // those are from the prev. saved version.
+              global $ID;
+              $meta     = array();
+              $meta     = p_get_metadata( $ID );
+              $assigned = $meta['subject'];
+          }
+          $options = array(
+              'blacklist' => explode( ' ', $this->getConf( 'blacklist' ) ),
+              'assigned' => $assigned,
+          );
+
+
+          $pos = $event->data->findElementByAttribute( 'type', 'submit' );
+          if ( !$pos ){ return; }
+          $prefixHidden = empty( $event->data->_hidden['prefix'] );
+          $suffixHidden = empty( $event->data->_hidden['suffix'] );
+          if ( $prefixHidden || ! $suffixHidden ){
+              return;
+          }
+          // get all tags
+          $out = '<div id="plugin__tagentry_wrapper">';
+          $out .= $this->_format_tags( $alltags, $options );
+          $out .= '</div>';
+          $event->data->insertElement( $pos++, $out );
+       }
     }
 
     /**
@@ -217,6 +259,52 @@ class action_plugin_tagentry extends DokuWiki_Action_Plugin {
         //$rv .= '</div>';
         //$rv .= '</div>';
         return ( $rv );
+    }
+
+    /**
+     * Add Check box items to form
+     *
+     * @param $form form object to add elements to
+     * @param $alltags array of tags to display.
+     * @param $options array
+     */
+    function _add_tag_checks( $form, $alltags, $options ) {
+        $pos = $form->findPositionByAttribute('id', 'editButtons') +1;
+        $form->addHTML("<div id='plugin__tagentry_wrapper'><div class='taglist'>", $pos);
+        $pos++;
+
+        if ( !$pos ){ return; }
+        if ( !is_array( $alltags ) ){ return ; }
+        if ( count( $alltags ) < 1 ){ return ; }
+
+        // Trie les tags
+        natcasesort( $alltags );
+
+        // Boucle sur les tags
+        $i = 0;
+        foreach ( $alltags as $tagname ) {
+
+            // Blacklist
+            $hasBlacklist = is_array( $options['blacklist'] );
+            $inBlacklist = $this->in_iarray( $tagname, $options['blacklist'] );
+
+            if ( $hasBlacklist && $inBlacklist ){ continue; }
+
+            $checkbox = '<label><input type="checkbox" id="plugin__tagentry_cb' . $tagname . '"';
+            $checkbox .= ' value="1" name="' . $tagname . '"';
+            if ( $this->in_iarray( $tagname, $options['assigned'] ) ){
+                $checkbox .= ' checked';
+            }
+
+            $checkbox .= ' onclick="tagentry_clicktag(\'' . $this->escapeJSstring( $tagname ) . '\', this);"';
+
+            $checkbox .= ' /> ' . $this->_getTagTitle( $tagname )  ;
+            $checkbox .= '</label>';
+            $form->addHTML($checkbox, $pos);
+            $pos++;
+        }
+        $form->addHTML("</div></div>", $pos);
+        $pos++;
     }
 
     // MODIF : 23/12/2013 14:55:07
